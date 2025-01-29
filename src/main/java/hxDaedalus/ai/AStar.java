@@ -2,6 +2,7 @@
 package hxDaedalus.ai;
 
 import haxe.root.*;
+import hxDaedalus.data.math.Geom2D;
 
 @SuppressWarnings(value={"rawtypes", "unchecked"})
 public class AStar extends haxe.lang.HxObject
@@ -376,6 +377,22 @@ public class AStar extends haxe.lang.HxObject
 					entryPoint.x = ( (( innerEdge.get_originVertex().get_pos().x + innerEdge.get_destinationVertex().get_pos().x )) / 2 );
 					//line 181 "/Users/tao/projects/hxDaedalus/src/hxDaedalus/ai/AStar.hx"
 					entryPoint.y = ( (( innerEdge.get_originVertex().get_pos().y + innerEdge.get_destinationVertex().get_pos().y )) / 2 );
+
+					// entryPoint will be the direct point of intersection between fromPoint and toXY if the edge innerEdge
+					// intersects it
+					hxDaedalus.data.math.Point2D vw1 = innerEdge.get_originVertex().get_pos();
+					hxDaedalus.data.math.Point2D vw2 = innerEdge.get_destinationVertex().get_pos();
+					if (!Geom2D.intersections2segments(fromPoint.x, fromPoint.y, toX, toY, vw1.x, vw1.y, vw2.x, vw2.y, entryPoint, null, null)) {
+						// Recycle the entryPoint variable to create a Point2D(toX, toY)
+						entryPoint.setXY(toX, toY);
+						double vst = vw1.distanceSquaredTo(fromPoint) + vw1.distanceSquaredTo(entryPoint);
+						double wst = vw2.distanceSquaredTo(fromPoint) + vw2.distanceSquaredTo(entryPoint);
+						if (vst <= wst) {
+							entryPoint.setXY(vw1.x, vw1.y);
+						} else {
+							entryPoint.setXY(vw2.x, vw2.y);
+						}
+					}
 					//line 182 "/Users/tao/projects/hxDaedalus/src/hxDaedalus/ai/AStar.hx"
 					distancePoint.x = ( entryPoint.x - toX );
 					//line 183 "/Users/tao/projects/hxDaedalus/src/hxDaedalus/ai/AStar.hx"

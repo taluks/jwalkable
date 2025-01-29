@@ -105,7 +105,12 @@ public class Point2D extends haxe.lang.HxObject
 		//line 51 "/Users/tao/projects/hxDaedalus/src/hxDaedalus/data/math/Point2D.hx"
 		return java.lang.Math.sqrt(( ( diffX * diffX ) + ( diffY * diffY ) ));
 	}
-	
+
+	public double distanceSquaredTo(hxDaedalus.data.math.Point2D p) {
+		double diffX = x - p.x;
+		double diffY = y - p.y;
+		return diffX * diffX + diffY * diffY;
+	}
 	
 	@Override public double __hx_setField_f(java.lang.String field, double value, boolean handleProperties)
 	{
